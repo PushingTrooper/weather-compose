@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "412498443615",
+    "project_id": "interview-weather",
+    "storage_bucket": "interview-weather.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412498443615:android:7f49590f889c0a1c0a4aea",
+        "android_client_info": {
+          "package_name": "milori.junis.weather"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMXNg30XD9T6mSgFLD4NWIFLGfJBXDt58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
