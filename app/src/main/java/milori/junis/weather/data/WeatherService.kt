@@ -7,9 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface WeatherService {
-    @GET("/data/2.5/weather?lat={lat}&lon={lon}&appid=${BuildConfig.OPEN_WEATHER_API_KEY}")
+    @GET("/data/2.5/weather")
     suspend fun getWeather(
         @Query("lat") latitude: Double,
-        @Query("lon") longitude: Double
-    ): NetworkResponse<String, String>
+        @Query("lon") longitude: Double,
+        @Query("appid") apiKey: String = BuildConfig.OPEN_WEATHER_API_KEY
+    ): GenericResponse<String>
 }

@@ -26,7 +26,7 @@ class WeatherViewModel @Inject constructor(
                       response.body
                  }
                  is NetworkResponse.ApiError -> {
-                     response.body.orEmpty()
+                     response.body?.message.orEmpty()
                  }
                 is NetworkResponse.NetworkError -> {
                     "network"
