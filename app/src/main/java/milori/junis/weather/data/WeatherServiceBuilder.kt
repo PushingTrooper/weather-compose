@@ -1,6 +1,10 @@
 package milori.junis.weather.data
 
 import com.google.gson.GsonBuilder
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import milori.junis.weather.BuildConfig
 import milori.junis.weather.data.helpers.NetworkResponseAdapterFactory
 import okhttp3.OkHttpClient
@@ -10,7 +14,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-
+@Module
+@InstallIn(SingletonComponent::class)
 class WeatherServiceBuilder {
     private fun client(): OkHttpClient {
         val clientBuilder = OkHttpClient.Builder()
@@ -40,6 +45,7 @@ class WeatherServiceBuilder {
             .build()
     }
 
+    @Provides
     fun buildService(): WeatherService {
         return retrofit().create(WeatherService::class.java)
     }
