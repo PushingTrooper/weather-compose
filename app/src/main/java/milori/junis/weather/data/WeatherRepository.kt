@@ -1,5 +1,7 @@
 package milori.junis.weather.data
 
+import milori.junis.weather.BuildConfig
+import retrofit2.http.Query
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
@@ -8,5 +10,10 @@ class WeatherRepository @Inject constructor(
     suspend fun getWeather(
         latitude: Double,
         longitude: Double
-    ) = weatherService.getWeather(latitude, longitude)
+    ) = weatherService.getCurrentWeather(latitude, longitude)
+
+    suspend fun getForecast(
+        latitude: Double,
+        longitude: Double
+    ) = weatherService.getCurrentWeather(latitude, longitude)
 }
