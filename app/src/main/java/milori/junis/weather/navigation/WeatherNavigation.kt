@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import milori.junis.weather.ui.screens.settings.SettingsScreen
 import milori.junis.weather.ui.screens.weather.WeatherScreen
 
 @Composable
@@ -22,7 +23,10 @@ fun WeatherNavigation(
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(WeatherScreens.WeatherScreen.name) {
-            WeatherScreen(snackbarHostState)
+            WeatherScreen(navController, snackbarHostState)
+        }
+        composable(WeatherScreens.SettingsScreen.name) {
+            SettingsScreen(navController, snackbarHostState)
         }
     }
 }

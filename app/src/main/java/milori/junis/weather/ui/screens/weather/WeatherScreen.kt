@@ -2,12 +2,15 @@ package milori.junis.weather.ui.screens.weather
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -21,18 +24,23 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import milori.junis.weather.R
 import milori.junis.weather.data.helpers.Either
+import milori.junis.weather.navigation.WeatherScreens
 import milori.junis.weather.utils.LatAndLong
 import milori.junis.weather.utils.RequestLocationPermission
 import milori.junis.weather.utils.getLastUserLocation
 
 @Composable
 fun WeatherScreen(
+    navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     viewModel: WeatherViewModel = hiltViewModel()
 ) {
@@ -78,11 +86,29 @@ fun WeatherScreen(
     }
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            viewModel.dayOfLatestCall.value,
-            Modifier.padding(top = 8.dp),
-            fontWeight = FontWeight.W300
-        )
+        Box(contentAlignment = Alignment.CenterEnd) {
+            Text(
+                viewModel.dayOfLatestCall.value,
+                Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                fontWeight = FontWeight.W300,
+                textAlign = TextAlign.Center
+            )
+            IconButton(
+                onClick = {
+                    navController.navigate(WeatherScreens.SettingsScreen.name)
+                },
+                modifier = Modifier.padding(end = 16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.outline_settings),
+                    contentDescription = stringResource(
+                        id = R.string.settings
+                    )
+                )
+            }
+        }
         Text(
             viewModel.timeOfLatestCall.value,
             fontSize = 40.sp,
