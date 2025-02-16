@@ -19,6 +19,7 @@ import milori.junis.weather.R
 import milori.junis.weather.data.UiState
 import milori.junis.weather.data.helpers.Either
 import milori.junis.weather.data.helpers.NetworkResponse
+import milori.junis.weather.utils.LatAndLong
 import java.util.Locale
 import kotlin.time.TimeSource
 
@@ -36,19 +37,13 @@ class WeatherViewModel @Inject constructor(
     val weatherIconRes = mutableIntStateOf(R.drawable.clear_day)
     val weatherForecast = mutableStateListOf<List<WeatherForecast>>()
 
-//    val errorFlow =
-
-    init {
-        callWeather()
-    }
-
-    private fun callWeather() {
+    fun getWeatherFromLocation(latAndLong: LatAndLong) {
         val now = LocalDateTime.now()
         timeOfLatestCall.value = now.toStringDateTime("hh:mma")
         dayOfLatestCall.value = now.toStringDateTime("EEEE, dd MMM")
 
         viewModelScope.launch {
-            when (val response = repository.getWeather(41.324665368, 19.818663392)) {
+            when (val response = repository.getWeather(latAndLong.latitude, latAndLong.longitude)) {
                 is NetworkResponse.Success -> {
                     val body = response.body
                     val weather = body.weather.first()

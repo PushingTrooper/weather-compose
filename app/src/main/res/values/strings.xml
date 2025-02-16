@@ -2,4 +2,8 @@
     <string name="app_name">weather</string>
     <string name="error_network">There was a problem with the connection</string>
     <string name="error_unknown">A problem has occurred</string>
+    <string name="request_permissions_rationale_title">These permissions are required to use the weather app.</string>
+    <string name="request_notification_permission_rationale_message">These permission are needed to get the current weather!</string>
+    <string name="ask_me">Ask me</string>
+    <string name="cancel">Cancel</string>
 </resources>
