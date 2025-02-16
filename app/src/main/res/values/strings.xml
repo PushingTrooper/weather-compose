@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">weather</string>
+    <string name="error_network">There was a problem with the connection</string>
+    <string name="error_unknown">A problem has occurred</string>
 </resources>

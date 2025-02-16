@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import milori.junis.weather.data.WeatherRepository
 import milori.junis.weather.data.model.forecast_16_days.WeatherForecast
@@ -13,13 +16,19 @@ import milori.junis.weather.utils.toStringDateTime
 import java.time.LocalDateTime
 import javax.inject.Inject
 import milori.junis.weather.R
+import milori.junis.weather.data.UiState
+import milori.junis.weather.data.helpers.Either
 import milori.junis.weather.data.helpers.NetworkResponse
 import java.util.Locale
+import kotlin.time.TimeSource
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val repository: WeatherRepository
 ) : ViewModel() {
+    private val appUiState = MutableStateFlow(UiState())
+    val uiState = appUiState.asStateFlow()
+
     val currentWeatherTemperature = mutableStateOf("-")
     val timeOfLatestCall = mutableStateOf("-")
     val dayOfLatestCall = mutableStateOf("-")
@@ -63,7 +72,41 @@ class WeatherViewModel @Inject constructor(
                         String.format(Locale.getDefault(), "%.0f", body.main.temp)
                 }
 
-                else -> {}
+                is NetworkResponse.ApiError -> {
+                    appUiState.update {
+                        it.copy(
+                            showSnackBarEvent = TimeSource.Monotonic.markNow(),
+                            message = Either.Right(response.body?.message.orEmpty())
+                        )
+                    }
+                }
+
+                is NetworkResponse.NetworkError -> {
+                    appUiState.update {
+                        it.copy(
+                            showSnackBarEvent = TimeSource.Monotonic.markNow(),
+                            message = Either.Left(R.string.error_network)
+                        )
+                    }
+                }
+
+                is NetworkResponse.UnknownError -> {
+                    appUiState.update {
+                        it.copy(
+                            showSnackBarEvent = TimeSource.Monotonic.markNow(),
+                            message = Either.Left(R.string.error_unknown)
+                        )
+                    }
+                }
+
+                else -> {
+                    appUiState.update {
+                        it.copy(
+                            showSnackBarEvent = TimeSource.Monotonic.markNow(),
+                            message = Either.Left(R.string.error_unknown)
+                        )
+                    }
+                }
             }
         }
     }
