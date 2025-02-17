@@ -23,12 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import milori.junis.weather.R
+import milori.junis.weather.data.model.unit.DEFAULT_UNIT
 import milori.junis.weather.data.model.unit.Unit
 
 @Composable
@@ -37,8 +37,9 @@ fun SettingsScreen(
     snackbarHostState: SnackbarHostState,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val radioOptions = listOf(Unit(1, R.string.metric), Unit(2, R.string.imperial))
+    val radioOptions = listOf(DEFAULT_UNIT, Unit(2, R.string.imperial))
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    onOptionSelected(viewModel.userSelectedUnit.value)
 
     Column(Modifier.fillMaxSize()) {
         IconButton(
@@ -70,7 +71,7 @@ fun SettingsScreen(
                         .selectable(
                             selected = (radio == selectedOption),
                             onClick = {
-                                onOptionSelected(radio)
+                                viewModel.setSelectedUnit(radio)
                             },
                             role = Role.RadioButton
                         )

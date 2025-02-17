@@ -12,6 +12,7 @@ interface WeatherService {
     suspend fun getCurrentWeather(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
+        @Query("units") units: String,
         @Query("appid") apiKey: String = BuildConfig.OPEN_WEATHER_API_KEY
     ): GenericResponse<CurrentWeatherResponse>
 
@@ -19,6 +20,7 @@ interface WeatherService {
     suspend fun getForecast(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
+        @Query("units") units: String,
         @Query("appid") apiKey: String = BuildConfig.OPEN_WEATHER_API_KEY
     ): GenericResponse<ForecastResponse>
 }
