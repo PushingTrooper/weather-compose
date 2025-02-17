@@ -13,7 +13,7 @@ data class CurrentWeatherResponse(
     val wind: Wind?,
     val rain: Rain?,
     val clouds: Clouds?,
-    val dt: Int,
+    val dt: Long,
     val sys: Sys,
     val timezone: Int,
     val id: Int,

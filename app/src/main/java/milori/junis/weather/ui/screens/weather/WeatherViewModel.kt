@@ -19,7 +19,10 @@ import milori.junis.weather.data.model.current_weather.CurrentWeatherResponse
 import milori.junis.weather.data.model.forecast_16_days.WeatherForecast
 import milori.junis.weather.utils.LatAndLong
 import milori.junis.weather.utils.toStringDateTime
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.time.TimeSource
@@ -38,15 +41,16 @@ class WeatherViewModel @Inject constructor(
     val weatherIconRes = mutableIntStateOf(R.drawable.clear_day)
     val weatherForecast = mutableStateListOf<List<WeatherForecast>>()
 
+    init {
+        getOfflineWeatherData()
+    }
+
+    fun changeUiState(newUiState: UiState) {
+        appUiState.value = newUiState
+    }
+
     fun getWeatherFromLocation(latAndLong: LatAndLong) {
-        val now = LocalDateTime.now()
-        timeOfLatestCall.value = now.toStringDateTime("hh:mma")
-        dayOfLatestCall.value = now.toStringDateTime("EEEE, dd MMM")
-
         viewModelScope.launch {
-            val offlineWeatherData = repository.getOfflineWeatherData()
-            if (offlineWeatherData != null) changeWeatherData(offlineWeatherData)
-
             when (val response =
                 repository.getOnlineWeather(latAndLong.latitude, latAndLong.longitude)) {
                 is NetworkResponse.Success -> {
@@ -94,8 +98,21 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun changeWeatherData(weatherResponse: CurrentWeatherResponse) {
+    private fun getOfflineWeatherData() {
+        viewModelScope.launch {
+            val offlineWeatherData = repository.getOfflineWeatherData()
+            if (offlineWeatherData != null) changeWeatherData(offlineWeatherData)
+        }
+    }
+
+    private fun changeWeatherData(weatherResponse: CurrentWeatherResponse) {
         val weather = weatherResponse.weather.first()
+        val timeOfWeather = LocalDateTime.ofInstant(
+            Instant.ofEpochSecond(weatherResponse.dt),
+            ZoneId.systemDefault()
+        )
+        timeOfLatestCall.value = timeOfWeather.toStringDateTime("hh:mma")
+        dayOfLatestCall.value = timeOfWeather.toStringDateTime("EEEE, dd MMM")
 
         val weatherCode = weather.id
         weatherIconRes.intValue = if (weatherCode == 800) {

@@ -32,11 +32,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import milori.junis.weather.R
+import milori.junis.weather.data.UiState
 import milori.junis.weather.data.helpers.Either
 import milori.junis.weather.navigation.WeatherScreens
 import milori.junis.weather.utils.LatAndLong
 import milori.junis.weather.utils.RequestLocationPermission
 import milori.junis.weather.utils.getLastUserLocation
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 @Composable
 fun WeatherScreen(
@@ -53,16 +56,25 @@ fun WeatherScreen(
             getLastUserLocation(
                 context,
                 onGetLocationSuccess = {
-                    println("Location LATITUDE: ${it.first}, LONGITUDE: ${it.second}")
                     viewModel.getWeatherFromLocation(LatAndLong(it.first, it.second))
                 },
                 onGetLocationFailed = { exception ->
-                    println(exception.localizedMessage ?: "Error Getting Last Location")
+                    viewModel.changeUiState(
+                        UiState(
+                            TimeSource.Monotonic.markNow(),
+                            Either.Right(exception.message.orEmpty())
+                        )
+                    )
                 }
             )
         },
         onPermissionDenied = {
-            // show snack
+            viewModel.changeUiState(
+                UiState(
+                    TimeSource.Monotonic.markNow(),
+                    Either.Left(R.string.permission_data_denied)
+                )
+            )
         }
     )
 
