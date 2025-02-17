@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import kotlinx.coroutines.flow.first
 import milori.junis.weather.data.data_store.AppSettings
 import milori.junis.weather.data.model.current_weather.CurrentWeatherResponse
+import milori.junis.weather.data.model.forecast.ForecastResponse
 import milori.junis.weather.data.model.unit.Unit
 import javax.inject.Inject
 
@@ -44,6 +45,14 @@ class WeatherRepository @Inject constructor(
     suspend fun saveWeatherData(currentWeatherResponse: CurrentWeatherResponse) {
         dataStore.updateData {
             it.copy(currentWeatherResponse = currentWeatherResponse)
+        }
+    }
+
+    suspend fun getOfflineForecast() = dataStore.data.first().forecastResponse
+
+    suspend fun saveForecast(forecastResponse: ForecastResponse) {
+        dataStore.updateData {
+            it.copy(forecastResponse = forecastResponse)
         }
     }
 }
