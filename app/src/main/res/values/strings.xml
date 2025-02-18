@@ -11,4 +11,5 @@
     <string name="metric">Metric</string>
     <string name="imperial">Imperial</string>
     <string name="navigate_back">Navigate onto the previous screen</string>
+    <string name="permission_data_denied">Permission data is denied</string>
 </resources>

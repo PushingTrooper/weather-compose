@@ -5,9 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,11 +36,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import milori.junis.weather.R
+import milori.junis.weather.data.UiState
 import milori.junis.weather.data.helpers.Either
 import milori.junis.weather.navigation.WeatherScreens
 import milori.junis.weather.utils.LatAndLong
 import milori.junis.weather.utils.RequestLocationPermission
+import milori.junis.weather.utils.getIconResFromWeatherCode
 import milori.junis.weather.utils.getLastUserLocation
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 @Composable
 fun WeatherScreen(
@@ -53,16 +61,25 @@ fun WeatherScreen(
             getLastUserLocation(
                 context,
                 onGetLocationSuccess = {
-                    println("Location LATITUDE: ${it.first}, LONGITUDE: ${it.second}")
-                    viewModel.getWeatherFromLocation(LatAndLong(it.first, it.second))
+                    viewModel.fetchDataFromLocation(LatAndLong(it.first, it.second))
                 },
                 onGetLocationFailed = { exception ->
-                    println(exception.localizedMessage ?: "Error Getting Last Location")
+                    viewModel.changeUiState(
+                        UiState(
+                            TimeSource.Monotonic.markNow(),
+                            Either.Right(exception.message.orEmpty())
+                        )
+                    )
                 }
             )
         },
         onPermissionDenied = {
-            // show snack
+            viewModel.changeUiState(
+                UiState(
+                    TimeSource.Monotonic.markNow(),
+                    Either.Left(R.string.permission_data_denied)
+                )
+            )
         }
     )
 
@@ -144,6 +161,27 @@ fun WeatherScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HorizontalDivider(Modifier.fillMaxWidth(0.7f), thickness = 2.dp)
+            LazyRow(
+                Modifier
+                    .height(100.dp)
+                    .padding(horizontal = 16.dp)
+            ) {
+                items(viewModel.weatherForecast) { forecast ->
+                    Column(
+                        Modifier
+                            .fillMaxHeight()
+                            .padding(end = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = forecast.time)
+                        Icon(
+                            painter = painterResource(id = getIconResFromWeatherCode(forecast.iconCode)),
+                            contentDescription = null
+                        )
+                        Text(text = forecast.temp)
+                    }
+                }
+            }
         }
     }
 }
