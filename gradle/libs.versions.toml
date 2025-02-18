@@ -18,6 +18,8 @@ googleServices = "4.4.2"
 loggingInterceptor = "4.12.0"
 retrofitVersion = "2.9.0"
 playServicesLocation = "21.3.0"
+mociktoVersion="5.15.2"
+mociktoKotlinVersion="5.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,9 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref="mociktoVersion" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref="mociktoVersion" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref="mociktoKotlinVersion" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlinSerialization" }

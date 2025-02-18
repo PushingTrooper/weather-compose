@@ -31,7 +31,7 @@ object DataStoreModule {
     fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<AppSettings> {
         return DataStoreFactory.create(
             serializer = AppSettingsSerializable,
-            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
+            produceFile = { appContext.dataStoreFile("app_settings.pb") },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
         )
