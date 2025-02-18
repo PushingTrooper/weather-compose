@@ -55,7 +55,7 @@ class WeatherViewModel @Inject constructor(
         getForecastFromLocation(latAndLong)
     }
 
-    private fun getWeatherFromLocation(latAndLong: LatAndLong) {
+    fun getWeatherFromLocation(latAndLong: LatAndLong) {
         viewModelScope.launch {
             when (val response =
                 repository.getOnlineWeather(latAndLong.latitude, latAndLong.longitude)) {

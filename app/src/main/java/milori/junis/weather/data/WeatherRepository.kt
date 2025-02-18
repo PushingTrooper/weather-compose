@@ -5,10 +5,11 @@ import kotlinx.coroutines.flow.first
 import milori.junis.weather.data.data_store.AppSettings
 import milori.junis.weather.data.model.current_weather.CurrentWeatherResponse
 import milori.junis.weather.data.model.forecast.ForecastResponse
+import milori.junis.weather.data.model.unit.DEFAULT_UNIT
 import milori.junis.weather.data.model.unit.Unit
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(
+open class WeatherRepository @Inject constructor(
     private val weatherService: WeatherService,
     private val dataStore: DataStore<AppSettings>
 ) {
@@ -32,7 +33,7 @@ class WeatherRepository @Inject constructor(
 
     suspend fun getAppSettings() = dataStore.data
 
-    suspend fun getUserSelectedUnit() = dataStore.data.first().unit
+    open suspend fun getUserSelectedUnit() = dataStore.data.first().unit
 
     suspend fun saveUserSelectedUnit(unit: Unit) {
         dataStore.updateData {

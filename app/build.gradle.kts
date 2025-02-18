@@ -22,7 +22,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "milori.junis.weather.CustomTestRunner"
 
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
@@ -74,6 +74,10 @@ dependencies {
     androidTestImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.mockito.kotlin)
+    // For instrumented tests.
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    // ...with Kotlin.
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
